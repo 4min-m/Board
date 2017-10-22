@@ -16,19 +16,29 @@ public class onBoardBot extends TelegramLongPollingBot {
             MySQLAccess mySQLAccess = new MySQLAccess();
 
             try {
-                mySQLAccess.excecute(
-                        "INSERT INTO `states`(`id`, `message`) VALUES (NULL,'"+update.getMessage().getText()+"')");
 
             }catch (Exception e){
                 e.printStackTrace();
             }
+            SendMessage message = new SendMessage().setChatId(update.getMessage().getChatId());
 
-            SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
-                    .setChatId(update.getMessage().getChatId())
-                    .setText("دریافت شد!\r\n"+update.getMessage().getText());
-
-
-
+            switch (update.getMessage().getText()) {
+                case "/start":
+                    message.setText("به بات تخته دیواری خوش آمدید!");
+                    break;
+                case "صفحه اصلی":
+                    message.setText("دریافت شد!\r\n" + update.getMessage().getText());
+                    break;
+                case "درباره ما":
+                    message.setText("برنامه نویسان:\r\n"
+                    +"محمد زمان زاده\r\n"
+                            +"امین ملک فر"
+                    );
+                    break;
+                case "امکانات":
+                    message.setText("صفحه امکانات");
+                    break;
+            }
             try {
                 sendMessage(message); // Call method to send the message
             } catch (TelegramApiException e) {

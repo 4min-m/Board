@@ -60,6 +60,34 @@ public class MySQLAccess {
         return this.connect;
     }
 
+    public int getState(int chat_id)
+    {
+        ResultSet res = query("SELECT chat_id FROM states WHERE chat_id="+chat_id);
+        int state = 0;
+        try {
+            state = res.getInt("chat_id");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return state;
+    }
+    public void setState(int newState,int chat_id)
+    {
+        ResultSet res = query("SELECT chat_id FROM states WHERE chat_id="+chat_id);
+        try {
+            if (!res.first()) {
+                excecute("INSERT INTO states(chat_id, state) VALUES('"+chat_id+"','"+newState+"')");
+            }else
+            {
+                excecute("UPDATE states SET state='"+newState+"' WHERE chat_id='"+chat_id+"'");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
     // You need to close the resultSet
     private void close() {
         try {
