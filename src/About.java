@@ -1,13 +1,15 @@
+import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Update;
-import states.base;
+import org.telegram.telegrambots.bots.AbsSender;
+import org.telegram.telegrambots.exceptions.TelegramApiException;
 
 /**
  * Created by Mohammad on 11/4/2017.
  */
-public class About implements base {
+public class About implements baseState {
 
     @Override
-    public void excecute()
+    public void excecute(AbsSender absSender,SendMessage message, Update update)
     {
         MySQLAccess mySQLAccess = new MySQLAccess();
 
@@ -16,14 +18,16 @@ public class About implements base {
                 +"محمد زمان زاده\r\n"
                 +"امین ملک فر"
         );
-        break;
+        try {
+            absSender.sendMessage(message); // Call method to send the message
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public boolean isValid(Update update) {
-        if(update.getMessage().getText()=="درباره ما")
-            return true;
-        return false;
+        return update.getMessage().getText().equals("درباره ما");
     }
 
 }
