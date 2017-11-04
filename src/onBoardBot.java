@@ -34,21 +34,10 @@ public class onBoardBot extends TelegramLongPollingBot {
             keyboardRows.add(new KeyboardRow().add("صفحه اصلی"));
             message.setReplyMarkup(new ReplyKeyboardMarkup().setKeyboard(keyboardRows));
 */
-            ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
-            replyKeyboardMarkup.setSelective(true);
-            replyKeyboardMarkup.setResizeKeyboard(true);
-            replyKeyboardMarkup.setOneTimeKeyboard(false);
-            List<KeyboardRow> keyboard = new ArrayList<>();
-            KeyboardRow keyboardFirstRow = new KeyboardRow();
-            keyboardFirstRow.add("1");
-            keyboardFirstRow.add("2");
 
-
-            keyboard.add(keyboardFirstRow);
-            replyKeyboardMarkup.setKeyboard(keyboard);
-            message.setReplyMarkup(replyKeyboardMarkup);
             ArrayList<baseState> all = new ArrayList<baseState>();
             all.add(new About());
+            all.add(new StartState());
             for(baseState item:all)
             {
                 if(item.isValid(update))
