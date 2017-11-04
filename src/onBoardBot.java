@@ -1,7 +1,13 @@
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Update;
+import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardRow;
+import org.telegram.telegrambots.bots.AbsSender;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Mohammad on 10/15/2017.
@@ -22,7 +28,36 @@ public class onBoardBot extends TelegramLongPollingBot {
             }
             SendMessage message = new SendMessage().setChatId(update.getMessage().getChatId());
 
-            switch (update.getMessage().getText()) {
+/*
+            ArrayList<KeyboardRow> keyboardRows = new ArrayList<KeyboardRow>();
+
+            keyboardRows.add(new KeyboardRow().add("صفحه اصلی"));
+            message.setReplyMarkup(new ReplyKeyboardMarkup().setKeyboard(keyboardRows));
+*/
+            ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+            replyKeyboardMarkup.setSelective(true);
+            replyKeyboardMarkup.setResizeKeyboard(true);
+            replyKeyboardMarkup.setOneTimeKeyboard(false);
+            List<KeyboardRow> keyboard = new ArrayList<>();
+            KeyboardRow keyboardFirstRow = new KeyboardRow();
+            keyboardFirstRow.add("1");
+            keyboardFirstRow.add("2");
+
+
+            keyboard.add(keyboardFirstRow);
+            replyKeyboardMarkup.setKeyboard(keyboard);
+            message.setReplyMarkup(replyKeyboardMarkup);
+            ArrayList<baseState> all = new ArrayList<baseState>();
+            all.add(new About());
+            for(baseState item:all)
+            {
+                if(item.isValid(update))
+                {
+                    item.excecute(this,message,update);
+                    break;
+                }
+            }
+          /*  switch (update.getMessage().getText()) {
                 case "/start":
                     message.setText("به بات تخته دیواری خوش آمدید!");
                     break;
@@ -30,6 +65,7 @@ public class onBoardBot extends TelegramLongPollingBot {
                     message.setText("دریافت شد!\r\n" + update.getMessage().getText());
                     break;
                 case "درباره ما":
+                    mySQLAccess.setState(1,update.getMessage().getChatId());
                     message.setText("برنامه نویسان:\r\n"
                     +"محمد زمان زاده\r\n"
                             +"امین ملک فر"
@@ -38,12 +74,7 @@ public class onBoardBot extends TelegramLongPollingBot {
                 case "امکانات":
                     message.setText("صفحه امکانات");
                     break;
-            }
-            try {
-                sendMessage(message); // Call method to send the message
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
+            }*/
         }
     }
 
