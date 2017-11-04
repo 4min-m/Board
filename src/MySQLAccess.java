@@ -72,7 +72,7 @@ public class MySQLAccess {
 
         return state;
     }
-    public void setState(int newState,int chat_id)
+    public void setState(int newState,long chat_id)
     {
         ResultSet res = query("SELECT chat_id FROM states WHERE chat_id="+chat_id);
         try {
