@@ -9,6 +9,6 @@ public interface baseState {
 
     void excecute(AbsSender absSender, SendMessage sendMessage, Update update);
 
-    boolean isValid(Update update);
+    boolean isValid(Update update,int currentState);
 
 }

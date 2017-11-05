@@ -1,6 +1,10 @@
 /**
  * Created by Mohammad on 10/22/2017.
  */
+import jdk.nashorn.internal.objects.Global;
+import jdk.nashorn.internal.parser.JSONParser;
+import org.json.JSONObject;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -60,32 +64,65 @@ public class MySQLAccess {
         return this.connect;
     }
 
-    public int getState(int chat_id)
+    public int getState(long chat_id)
     {
-        ResultSet res = query("SELECT chat_id FROM states WHERE chat_id="+chat_id);
-        int state = 0;
+        ResultSet res = query("SELECT state FROM states WHERE chat_id="+chat_id);
+        int state = -1;
+
         try {
-            state = res.getInt("chat_id");
+            res.next();
+            state = res.getInt("state");
         }catch (Exception e){
             e.printStackTrace();
+            return state;
         }
 
         return state;
     }
     public void setState(int newState,long chat_id)
     {
-        ResultSet res = query("SELECT chat_id FROM states WHERE chat_id="+chat_id);
         try {
-            if (!res.first()) {
-                excecute("INSERT INTO states(chat_id, state) VALUES('"+chat_id+"','"+newState+"')");
-            }else
-            {
-                excecute("UPDATE states SET state='"+newState+"' WHERE chat_id='"+chat_id+"'");
-            }
+
+        excecute("UPDATE states SET state='"+newState+"' WHERE chat_id='"+chat_id+"'");
+
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
 
+    public void setDataOfState(JSONObject jsonData,long chat_id)
+    {
+        try {
+            PreparedStatement ps = this.getConnection().prepareStatement("UPDATE states SET data=?" +
+                    " WHERE chat_id="+chat_id);
+            ps.setString(1,jsonData.toString());
+            ps.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public JSONObject getDataOfState(long chat_id)
+    {
+        ResultSet r = query("SELECT data FROM states WHERE chat_id="+chat_id);
+        try {
+            r.next();
+            String data = r.getString("data");
+            if(data==null)
+                return new JSONObject();
+            return new JSONObject(data);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public void createUserState(long chat_id,String fullname,String username)
+    {
+        try {
+         excecute("INSERT INTO states(chat_id, state,fullname,username)" +
+                 " VALUES('"+chat_id+"','0','"+fullname+"','"+username+"')");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     // You need to close the resultSet

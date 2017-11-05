@@ -26,7 +26,7 @@ public class About implements baseState {
     }
 
     @Override
-    public boolean isValid(Update update) {
+    public boolean isValid(Update update, int currentState) {
         return update.getMessage().getText().equals("درباره ما");
     }
 
