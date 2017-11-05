@@ -20,12 +20,13 @@ public class onBoardBot extends TelegramLongPollingBot {
         if (update.hasMessage() && update.getMessage().hasText()) {
 
             MySQLAccess mySQLAccess = new MySQLAccess();
-
-            try {
-
-            }catch (Exception e){
-                e.printStackTrace();
+            int currentState = mySQLAccess.getState(update.getMessage().getChatId());
+            System.out.println("current="+currentState);
+            if(currentState == -1) {
+                mySQLAccess.createUserState(update.getMessage().getChatId(), update.getMessage().getChat().getFirstName() + " " + update.getMessage().getChat().getLastName(), update.getMessage().getChat().getUserName());
+                currentState = STATE.START;
             }
+
             SendMessage message = new SendMessage().setChatId(update.getMessage().getChatId());
 
 /*
@@ -35,35 +36,21 @@ public class onBoardBot extends TelegramLongPollingBot {
             message.setReplyMarkup(new ReplyKeyboardMarkup().setKeyboard(keyboardRows));
 */
 
+
             ArrayList<baseState> all = new ArrayList<baseState>();
             all.add(new About());
             all.add(new StartState());
+            all.add(new NewAdChooseCategory());
+            all.add(new NewAdSetTitle());
+
             for(baseState item:all)
             {
-                if(item.isValid(update))
+                if(item.isValid(update,currentState))
                 {
                     item.excecute(this,message,update);
                     break;
                 }
             }
-          /*  switch (update.getMessage().getText()) {
-                case "/start":
-                    message.setText("به بات تخته دیواری خوش آمدید!");
-                    break;
-                case "صفحه اصلی":
-                    message.setText("دریافت شد!\r\n" + update.getMessage().getText());
-                    break;
-                case "درباره ما":
-                    mySQLAccess.setState(1,update.getMessage().getChatId());
-                    message.setText("برنامه نویسان:\r\n"
-                    +"محمد زمان زاده\r\n"
-                            +"امین ملک فر"
-                    );
-                    break;
-                case "امکانات":
-                    message.setText("صفحه امکانات");
-                    break;
-            }*/
         }
     }
 
