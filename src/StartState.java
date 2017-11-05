@@ -18,7 +18,7 @@ public class StartState implements baseState {
     {
         MySQLAccess mySQLAccess = new MySQLAccess();
 
-        mySQLAccess.setState(1,update.getMessage().getChatId());
+        mySQLAccess.setState(STATE.START,update.getMessage().getChatId());
         message.setText("به ربات هوشمند دیوار خوش آمدید!\n\r"
         +"لطفا از منو یکی از آیتم ها انتخاب کنید..."
                 +"\r\n"
@@ -44,7 +44,7 @@ public class StartState implements baseState {
         startKeyboard.add("صفحه اصلی");
 
         keyboard.add(keyboardRow1);
-        keyboard.add(keyboardRow2);
+//        keyboard.add(keyboardRow2);
         keyboard.add(keyboardRow3);
         keyboard.add(startKeyboard);
 
@@ -59,7 +59,7 @@ public class StartState implements baseState {
     }
 
     @Override
-    public boolean isValid(Update update) {
+    public boolean isValid(Update update, int currentState) {
         return update.getMessage().getText().equals("/start") || update.getMessage().getText().equals("صفحه اصلی");
     }
 
