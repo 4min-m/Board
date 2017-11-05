@@ -19,8 +19,8 @@ public class NewAdChooseCategory implements baseState {
     {
         MySQLAccess mySQLAccess = new MySQLAccess();
 
-        mySQLAccess.setState(STATE.START,update.getMessage().getChatId());
-        message.setText("دسته بندی آگهی را انتخاب کنید:"
+        mySQLAccess.setState(STATE.NEW_AD_SET_TITLE,update.getMessage().getChatId());
+        message.setText("لطفا دسته بندی مورد نظر خود را انتخاب کنید:"
                 +"\r\n"
         );
 
@@ -63,7 +63,7 @@ public class NewAdChooseCategory implements baseState {
 
     @Override
     public boolean isValid(Update update, int currentState) {
-        return currentState==STATE.NEW_AD_CHOOSE_CATEGORY;
+        return update.getMessage().getText().equals("افزودن آگهی");
     }
 
 }
